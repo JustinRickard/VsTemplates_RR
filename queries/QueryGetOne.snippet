@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <Title>Query Get One</Title>
+      <Author>Red River Software</Author>
+      <Description>Generates a GET query for getting a single item</Description>
+      <Shortcut>qryo</Shortcut>
+    </Header>
+    <Snippet>
+      <Code Language="CSharp">
+        <![CDATA[
+          public class $Entity$Query : QueryBase<$Entity$View>
+          {
+              public Guid Id { get; set; }
+          }
+
+          public class $Entity$QueryHandler : QueryHandlerBase<$Entity$Query, $Entity$View>
+          {
+              private readonly CoreContext _context;
+              private readonly IConfigurationProvider _mapConfig;
+
+              public $Entity$QueryHandler(CoreContext context, IConfigurationProvider mapConfig)
+              {
+                  _context = context;
+                  _mapConfig = mapConfig;
+              }
+
+              public override async Task<$Entity$View> RunAsync($Entity$Query query)
+              {
+                var result = await _coreContext.$Entities$
+                  .Where(e => e.Id == query.Id)
+                  .ProjectTo<$Entity$View>(_mapConfig)
+                  .AsNoTracking()
+                  .SingleOrDefaultAsync();
+
+                if (result == null) 
+                {
+                  throw new ErrorCodeException($NotFoundError$);
+                }
+
+                return result;
+              }
+          }
+        ]]>
+      </Code>
+      <Imports>
+        <Import><Namespace>System.Threading.Tasks</Namespace></Import>
+        <Import><Namespace>AutoMapper</Namespace></Import>
+        <Import><Namespace>AutoMapper.QueryableExtensions</Namespace></Import>
+        <Import><Namespace>RedRiver.Saffron.AspNetCore</Namespace></Import>
+        <Import><Namespace>RedRiver.Saffron.Cqrs</Namespace></Import>
+      </Imports>
+      <Declarations>
+        <Literal>
+          <ID>Entity</ID>
+          <ToolTip>Entity name</ToolTip>
+          <Default>Entity</Default>
+        </Literal>
+        <Literal>
+          <ID>Entities</ID>
+          <ToolTip>DB Entities</ToolTip>
+          <Default>Entities</Default>
+        </Literal>
+        <Literal>
+          <ID>NotFoundError</ID>
+          <ToolTip>NotFoundError</ToolTip>
+          <Default>NotFoundError</Default>
+        </Literal>
+      </Declarations>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>
