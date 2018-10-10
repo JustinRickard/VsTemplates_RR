@@ -2,10 +2,10 @@
 <CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
   <CodeSnippet Format="1.0.0">
     <Header>
-      <Title>Endpoint Get by Id</Title>
+      <Title>Endpoint Get Many</Title>
       <Author>Red River Software</Author>
-      <Description>Generates a GET endpoint for getting a single item</Description>
-      <Shortcut>endg</Shortcut>
+      <Description>Generates a GET endpoint for getting multiple items</Description>
+      <Shortcut>endgm</Shortcut>
     </Header>
     <Snippet>
       <Code Language="CSharp">
@@ -13,28 +13,34 @@
         [Route(Routes.$Route$)]
         [SwaggerTag(SwaggerTags.$SwaggerTag$)]
         // [Authorize(nameof(AppPermissions.)]
-        public class $Name$Endpoint : Controller
+        public class $Entity$Endpoint : Controller
         {
           private readonly IQueryExecutor _queryExecutor;
+          private readonly IMapper _mapper;
           
-          public $Name$Endpoint(IQueryExecutor queryExecutor) 
+          public $Entity$Endpoint(IQueryExecutor queryExecutor, IMapper mapper) 
           {
             _queryExecutor = queryExecutor;
+            _mapper = mapper;
           }
         
           [HttpGet]
-          [Route("{id}")]
           [ProducesResponseType(typeof($Response$), 200)]
           [PossibleError($PossibleError$)]
           public async Task<IActionResult> Get(Guid id)
           {
-            var query = new $Query$Query {
-              Id = id
-            };
-            
+            var query = var query = _mapper.Map<$Entity$Query>(request);            
             var results = await _queryExecutor.ExecuteAsync(query);
 			      return Json(results);
           }
+        }
+
+        public class Get$Entity$Request : IHasMapConfiguration
+        {
+          public void ConfigureMaps(IMapperConfigurationExpression config)
+            {
+                config.CreateMap<Get$Entity$Request, $Entity$Query>();
+            }
         }
         ]]>
       </Code>
@@ -44,6 +50,7 @@
         <Import><Namespace>Microsoft.AspNetCore.Mvc</Namespace></Import>
         <Import><Namespace>RedRiver.Saffron.AspNetCore</Namespace></Import>
         <Import><Namespace>RedRiver.Saffron.Cqrs</Namespace></Import>
+        <Import><Namespace>RedRiver.Saffron.AutoMapper</Namespace></Import>
       </Imports>
       <Declarations>
         <Literal>
@@ -57,14 +64,9 @@
           <Default>SwaggerTag</Default>
         </Literal>
         <Literal>
-          <ID>Name</ID>
-          <ToolTip>Endpoint name</ToolTip>
-          <Default>Name</Default>
-        </Literal>
-        <Literal>
-          <ID>Query</ID>
-          <ToolTip>Query name</ToolTip>
-          <Default>Query</Default>
+          <ID>Entity</ID>
+          <ToolTip>Entity name</ToolTip>
+          <Default>Entity</Default>
         </Literal>
         <Literal>
           <ID>Response</ID>
@@ -75,7 +77,7 @@
           <ID>PossibleError</ID>
           <ToolTip>Possible error</ToolTip>
           <Default>PossibleError</Default>
-        </Literal>
+        </Literal>        
       </Declarations>
     </Snippet>
   </CodeSnippet>

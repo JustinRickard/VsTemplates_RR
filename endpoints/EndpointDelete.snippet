@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <Title>Endpoint Delete</Title>
+      <Author>Red River Software</Author>
+      <Description>Generates a DELETE endpoint</Description>
+      <Shortcut>endd</Shortcut>
+    </Header>
+    <Snippet>
+      <Code Language="CSharp">
+        <![CDATA[
+        [Route(Routes.$Route$)]
+        [SwaggerTag(SwaggerTags.$SwaggerTag$)]
+        // [Authorize(nameof(AppPermissions.)]
+        public class Delete$Entity$Endpoint : Controller
+        {
+          private readonly ICommandExecutor _commandExecutor;
+          private readonly IMapper _mapper;
+          private readonly ICallerId _callerId;
+          
+          public Delete$Entity$Endpoint(ICommandExecutor commandExecutor, ICallerId callerId) 
+          {
+            _commandExecutor = commandExecutor;
+            _callerId = callerId;
+          }
+        
+          [HttpPost]
+          [ProducesResponseType(typeof($Response$), 200)]
+          [PossibleError($PossibleError$)]
+          public async Task<IActionResult> Delete$Entity$([IsRequired($IdRequiredError$)] Guid id)
+          {
+            var command = new Delete$Entity$Command {
+              Id = id,
+              DeletedById = _callerId.GetPrincipalId()
+            }            
+
+            await _commandExecutor.ExecuteAsync(command);
+            return Json(command.Id);
+          }
+        }
+        ]]>
+      </Code>
+      <Imports>
+        <Import><Namespace>System.Threading.Tasks</Namespace></Import>
+        <Import><Namespace>AutoMapper</Namespace></Import>
+        <Import><Namespace>Microsoft.AspNetCore.Authorization</Namespace></Import>
+        <Import><Namespace>Microsoft.AspNetCore.Mvc</Namespace></Import>
+        <Import><Namespace>RedRiver.Saffron.AspNetCore</Namespace></Import>
+        <Import><Namespace>RedRiver.Saffron.Cqrs</Namespace></Import>
+        <Import><Namespace>RedRiver.Saffron.Auth</Namespace></Import>
+        <Import><Namespace>RedRiver.Saffron.AutoMapper</Namespace></Import>
+      </Imports>
+      <Declarations>
+        <Literal>
+          <ID>Route</ID>
+          <ToolTip>Route</ToolTip>
+          <Default>Route</Default>
+        </Literal>
+        <Literal>
+          <ID>SwaggerTag</ID>
+          <ToolTip>Swagger tag</ToolTip>
+          <Default>SwaggerTag</Default>
+        </Literal>
+        <Literal>
+          <ID>Entity</ID>
+          <ToolTip>Entity name</ToolTip>
+          <Default>Entity</Default>
+        </Literal>
+        <Literal>
+          <ID>Query</ID>
+          <ToolTip>Query name</ToolTip>
+          <Default>Query</Default>
+        </Literal>
+        <Literal>
+          <ID>Response</ID>
+          <ToolTip>Response</ToolTip>
+          <Default>Response</Default>
+        </Literal>
+        <Literal>
+          <ID>PossibleError</ID>
+          <ToolTip>Possible error</ToolTip>
+          <Default>PossibleError</Default>
+        </Literal>
+        <Literal>
+          <ID>IdRequiredError</ID>
+          <ToolTip>Id required error</ToolTip>
+          <Default>IdRequiredError</Default>
+        </Literal>
+      </Declarations>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>

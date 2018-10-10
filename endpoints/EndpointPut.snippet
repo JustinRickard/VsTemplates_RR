@@ -1,0 +1,106 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <Title>Endpoint Put</Title>
+      <Author>Red River Software</Author>
+      <Description>Generates a PUT endpoint</Description>
+      <Shortcut>endpu</Shortcut>
+    </Header>
+    <Snippet>
+      <Code Language="CSharp">
+        <![CDATA[
+        [Route(Routes.$Route$)]
+        [SwaggerTag(SwaggerTags.$SwaggerTag$)]
+        // [Authorize(nameof(AppPermissions.)]
+        public class Update$Entity$Endpoint : Controller
+        {
+          private readonly ICommandExecutor _commandExecutor;
+          private readonly IMapper _mapper;
+          private readonly ICallerId _callerId;
+          
+          public Update$Entity$Endpoint(ICommandExecutor commandExecutor, IMapper mapper, ICallerId callerId) 
+          {
+            _commandExecutor = commandExecutor;
+            _mapper = mapper;
+            _callerId = callerId;
+          }
+        
+          [HttpPut]
+          [Route("{id}")]
+          [ProducesResponseType(typeof($Response$), 200)]
+          [PossibleError($PossibleError$)]
+          public async Task<IActionResult> Update$Entity$([IsRequired($IdRequiredError$)] Guid id, [FromBody] Update$Entity$Request request)
+          {
+            var command = _mapper.Map<Update$Entity$Command>(request);
+            command.Id = id;
+            command.UpdatedById = _callerId.GetPrincipalId();
+
+            await _commandExecutor.ExecuteAsync(command);
+
+            return Json(command.Id);
+          }
+        }
+
+        public class Update$Entity$Request : IHasMapConfiguration
+        {
+          // add props here with validation attributes
+
+          public void ConfigureMaps(IMapperConfigurationExpression config)
+          {
+              config.CreateMap<Update$Entity$Request, Update$Entity$Command>()
+                  .ForMember(x => x.Id, y => y.Ignore());
+          }
+        }
+        ]]>
+      </Code>
+      <Imports>
+        <Import><Namespace>System.Threading.Tasks</Namespace></Import>
+        <Import><Namespace>AutoMapper</Namespace></Import>
+        <Import><Namespace>Microsoft.AspNetCore.Authorization</Namespace></Import>
+        <Import><Namespace>Microsoft.AspNetCore.Mvc</Namespace></Import>
+        <Import><Namespace>RedRiver.Saffron.AspNetCore</Namespace></Import>
+        <Import><Namespace>RedRiver.Saffron.Cqrs</Namespace></Import>
+        <Import><Namespace>RedRiver.Saffron.Auth</Namespace></Import>
+        <Import><Namespace>RedRiver.Saffron.AutoMapper</Namespace></Import>
+      </Imports>
+      <Declarations>
+        <Literal>
+          <ID>Route</ID>
+          <ToolTip>Route</ToolTip>
+          <Default>Route</Default>
+        </Literal>
+        <Literal>
+          <ID>SwaggerTag</ID>
+          <ToolTip>Swagger tag</ToolTip>
+          <Default>SwaggerTag</Default>
+        </Literal>
+        <Literal>
+          <ID>Entity</ID>
+          <ToolTip>Entity name</ToolTip>
+          <Default>Entity</Default>
+        </Literal>
+        <Literal>
+          <ID>Query</ID>
+          <ToolTip>Query name</ToolTip>
+          <Default>Query</Default>
+        </Literal>
+        <Literal>
+          <ID>Response</ID>
+          <ToolTip>Response</ToolTip>
+          <Default>Response</Default>
+        </Literal>
+        <Literal>
+          <ID>PossibleError</ID>
+          <ToolTip>Possible error</ToolTip>
+          <Default>PossibleError</Default>
+        </Literal>
+        <Literal>
+          <ID>IdRequiredError</ID>
+          <ToolTip>Id required error</ToolTip>
+          <Default>IdRequiredError</Default>
+        </Literal>
+      </Declarations>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>
