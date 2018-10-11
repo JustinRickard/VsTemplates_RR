@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <Title>Create command</Title>
+      <Author>Red River Software</Author>
+      <Description>Generates a Create command for adding a single item</Description>
+      <Shortcut>cmdc</Shortcut>
+    </Header>
+    <Snippet>
+      <Code Language="CSharp">
+        <![CDATA[
+          public class Create$Entity$Command : CommandBase, IHasMapConfiguration
+          {
+            public Guid Id { get; set; }
+
+            public void ConfigureMaps(IMapperConfigurationExpression config)
+            {
+                config.CreateMap<Create$Entity$Command, $Entity$>();
+            }
+          }
+
+          public class Create$Entity$CommandHandler : CommandHandlerBase<Create$Entity$Command>
+          {
+              private readonly CoreContext _context;
+              private readonly IMapper _mapper;
+
+              public Create$Entity$CommandHandler(CoreContext context, IMapper mapper)
+              {
+                  _context = context;
+                  _mapper = mapper;
+              }
+
+              public override async Task ExecuteAsync(Create$Entity$Command command)
+              {
+                  // validation
+
+                  var $Record$ = _mapper.Map<$Entity$>(command);
+                  $Record.CreatedUtc = DateTime.UtcNow;
+
+                  _context.Add($Record$);
+                  await _context.SaveChangesAsync();
+              }
+          }
+        ]]>
+      </Code>
+      <Imports>
+        <Import><Namespace>System.Threading.Tasks</Namespace></Import>
+        <Import><Namespace>Microsoft.EntityFrameworkCore</Namespace></Import>
+        <Import><Namespace>AutoMapper</Namespace></Import>
+        <Import><Namespace>RedRiver.Saffron.AspNetCore</Namespace></Import>
+        <Import><Namespace>RedRiver.Saffron.AutoMapper</Namespace></Import>
+        <Import><Namespace>RedRiver.Saffron.Cqrs</Namespace></Import>
+      </Imports>
+      <Declarations>
+        <Literal>
+          <ID>Entity</ID>
+          <ToolTip>Entity name</ToolTip>
+          <Default>Entity</Default>
+        </Literal>
+        <Literal>
+          <ID>Record</ID>
+          <ToolTip>Record to add</ToolTip>
+          <Default>Record</Default>
+        </Literal>
+      </Declarations>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <Title>Command Update</Title>
+      <Author>Red River Software</Author>
+      <Description>Generates an Update command and command handler for updating a single item</Description>
+      <Shortcut>cmdu</Shortcut>
+    </Header>
+    <Snippet>
+      <Code Language="CSharp">
+        <![CDATA[
+          public class Update$Entity$Command : CommandBase, IHasMapConfiguration
+          {
+            public Guid Id { get; set; }
+          }
+
+          public class Update$Entity$CommandHandler : CommandHandlerBase<Update$Entity$Command>
+          {
+              private readonly CoreContext _context;
+              private readonly IMapper _mapper;
+
+              public Update$Entity$CommandHandler(CoreContext context, IMapper mapper)
+              {
+                  _context = context;
+                  _mapper = mapper;
+              }
+
+              public override async Task ExecuteAsync(Update$Entity$Command command)
+              {
+                  // validation
+
+                  var $Record$ = await _coreContext.$Entities$
+                    .SingleOrDefaultAsync(x => x.Id == command.Id);
+
+                  if ($Record$ == null)
+                  {
+                      throw new ErrorCodeException($NotFoundError$);
+                  }                  
+
+                  // update entity properties
+                  
+                  await _context.SaveChangesAsync();
+              }
+          }
+        ]]>
+      </Code>
+      <Imports>
+        <Import><Namespace>System.Threading.Tasks</Namespace></Import>
+        <Import><Namespace>Microsoft.EntityFrameworkCore</Namespace></Import>
+        <Import><Namespace>AutoMapper</Namespace></Import>
+        <Import><Namespace>RedRiver.Saffron.AspNetCore</Namespace></Import>
+        <Import><Namespace>RedRiver.Saffron.AutoMapper</Namespace></Import>
+        <Import><Namespace>RedRiver.Saffron.Cqrs</Namespace></Import>
+      </Imports>
+      <Declarations>
+        <Literal>
+          <ID>Entity</ID>
+          <ToolTip>Entity name</ToolTip>
+          <Default>Entity</Default>
+        </Literal>
+        <Literal>
+          <ID>Entities</ID>
+          <ToolTip>Entities</ToolTip>
+          <Default>Entities</Default>
+        </Literal>
+        <Literal>
+          <ID>Record</ID>
+          <ToolTip>Record to add</ToolTip>
+          <Default>Record</Default>
+        </Literal>
+        <Literal>
+          <ID>NotFoundError</ID>
+          <ToolTip>Not Found error</ToolTip>
+          <Default>NotFoundError</Default>
+        </Literal>
+      </Declarations>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>

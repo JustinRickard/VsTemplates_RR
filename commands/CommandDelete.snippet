@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <Title>Command Delete</Title>
+      <Author>Red River Software</Author>
+      <Description>Generates an Delete command and command handler for deleting a single item</Description>
+      <Shortcut>cmdd</Shortcut>
+    </Header>
+    <Snippet>
+      <Code Language="CSharp">
+        <![CDATA[
+          public class Delete$Entity$Command : CommandBase
+          {
+              public Guid Id { get; set; }
+          }
+
+          public class Delete$Entity$CommandHandler : CommandHandlerBase<Delete$Entity$Command>
+          {
+              private readonly CoreContext _context;
+
+              public Delete$Entity$CommandHandler(CoreContext context)
+              {
+                  _context = context;
+              }
+
+              public override async Task ExecuteAsync(Delete$Entity$Command command)
+              {
+                  var $Record$ = await _context.$Entities$.SingleOrDefaultAsync(x => x.Id == command.Id);
+
+                  if ($Record$ == null)
+                  {
+                      throw new ErrorCodeException($NotFoundError$);
+                  }
+
+                  $Record$.DeletedUtc = DateTime.UtcNow;
+
+                  await _context.SaveChangesAsync();
+              }
+          }
+        ]]>
+      </Code>
+      <Imports>
+        <Import><Namespace>System.Threading.Tasks</Namespace></Import>
+        <Import><Namespace>Microsoft.EntityFrameworkCore</Namespace></Import>
+        <Import><Namespace>AutoMapper</Namespace></Import>
+        <Import><Namespace>RedRiver.Saffron.AspNetCore</Namespace></Import>
+        <Import><Namespace>RedRiver.Saffron.AutoMapper</Namespace></Import>
+        <Import><Namespace>RedRiver.Saffron.Cqrs</Namespace></Import>
+      </Imports>
+      <Declarations>
+        <Literal>
+          <ID>Entity</ID>
+          <ToolTip>Entity name</ToolTip>
+          <Default>Entity</Default>
+        </Literal>
+        <Literal>
+          <ID>Record</ID>
+          <ToolTip>Record to add</ToolTip>
+          <Default>Record</Default>
+        </Literal>
+        <Literal>
+          <ID>NotFoundError</ID>
+          <ToolTip>Not Found error</ToolTip>
+          <Default>NotFoundError</Default>
+        </Literal>
+      </Declarations>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>
