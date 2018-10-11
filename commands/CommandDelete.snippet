@@ -5,7 +5,7 @@
       <Title>Command Delete</Title>
       <Author>Red River Software</Author>
       <Description>Generates an Delete command and command handler for deleting a single item</Description>
-      <Shortcut>cmdd</Shortcut>
+      <Shortcut>cmd</Shortcut>
     </Header>
     <Snippet>
       <Code Language="CSharp">
@@ -13,6 +13,7 @@
           public class Delete$Entity$Command : CommandBase
           {
               public Guid Id { get; set; }
+              public Guid DeletedById { get; set; }
           }
 
           public class Delete$Entity$CommandHandler : CommandHandlerBase<Delete$Entity$Command>
@@ -34,6 +35,7 @@
                   }
 
                   $Record$.DeletedUtc = DateTime.UtcNow;
+                  $Record$.DeletedById = command.DeletedById;
 
                   await _context.SaveChangesAsync();
               }
@@ -53,6 +55,11 @@
           <ID>Entity</ID>
           <ToolTip>Entity name</ToolTip>
           <Default>Entity</Default>
+        </Literal>
+        <Literal>
+          <ID>Entities</ID>
+          <ToolTip>Entities name</ToolTip>
+          <Default>Entities</Default>
         </Literal>
         <Literal>
           <ID>Record</ID>

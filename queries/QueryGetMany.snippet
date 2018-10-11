@@ -5,7 +5,7 @@
       <Title>Query Get Many</Title>
       <Author>Red River Software</Author>
       <Description>Generates a GET query for getting multiple items</Description>
-      <Shortcut>qryo</Shortcut>
+      <Shortcut>qry</Shortcut>
     </Header>
     <Snippet>
       <Code Language="CSharp">
@@ -29,7 +29,7 @@
 
               public override async Task<$Entity$View> RunAsync($Entity$Query query)
               {
-                var query = _coreContext.$Entities$
+                var query = _context.$Entities$
                   .Where($Where$);                  
 
                 var count = await query.CountAsync();
@@ -38,10 +38,12 @@
                 var results = await query
                   .OrderBy($OrderBy$)
                   .ProjectTo<$Entity$View>(_mapConfig)
-                  .AsNoTracking()                  
+                  .AsNoTracking()
+                  .Skip(skip)
+				          .Take(query.PageSize)               
                   .ToArrayAsync();
 
-                return new PagedView<CampaignListView>
+                return new PagedView<$Entity$View>
                 {
                   Results = results,
                   TotalResults = count
