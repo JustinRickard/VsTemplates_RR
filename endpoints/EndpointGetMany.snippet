@@ -29,7 +29,7 @@
           [PossibleError($PossibleError$)]
           public async Task<IActionResult> Get(Guid id)
           {
-            var query = var query = _mapper.Map<$Entity$Query>(request);            
+            var query = _mapper.Map<$Entity$Query>(request);            
             var results = await _queryExecutor.ExecuteAsync(query);
 			      return Json(results);
           }
@@ -46,6 +46,7 @@
       </Code>
       <Imports>
         <Import><Namespace>System.Threading.Tasks</Namespace></Import>
+        <Import><Namespace>AutoMapper</Namespace></Import>
         <Import><Namespace>Microsoft.AspNetCore.Authorization</Namespace></Import>
         <Import><Namespace>Microsoft.AspNetCore.Mvc</Namespace></Import>
         <Import><Namespace>RedRiver.Saffron.AspNetCore</Namespace></Import>

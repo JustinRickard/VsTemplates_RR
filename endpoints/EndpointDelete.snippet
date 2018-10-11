@@ -26,7 +26,7 @@
           }
         
           [HttpPost]
-          [ProducesResponseType(typeof($Response$), 200)]
+          [ProducesResponseType(typeof(void), 200)]
           [PossibleError($PossibleError$)]
           public async Task<IActionResult> Delete$Entity$([IsRequired($IdRequiredError$)] Guid id)
           {
@@ -71,11 +71,6 @@
           <ID>Query</ID>
           <ToolTip>Query name</ToolTip>
           <Default>Query</Default>
-        </Literal>
-        <Literal>
-          <ID>Response</ID>
-          <ToolTip>Response</ToolTip>
-          <Default>Response</Default>
         </Literal>
         <Literal>
           <ID>PossibleError</ID>

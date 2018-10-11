@@ -28,7 +28,7 @@
         
           [HttpPut]
           [Route("{id}")]
-          [ProducesResponseType(typeof($Response$), 200)]
+          [ProducesResponseType(typeof(void), 200)]
           [PossibleError($PossibleError$)]
           public async Task<IActionResult> Update$Entity$([IsRequired($IdRequiredError$)] Guid id, [FromBody] Update$Entity$Request request)
           {
@@ -84,11 +84,6 @@
           <ID>Query</ID>
           <ToolTip>Query name</ToolTip>
           <Default>Query</Default>
-        </Literal>
-        <Literal>
-          <ID>Response</ID>
-          <ToolTip>Response</ToolTip>
-          <Default>Response</Default>
         </Literal>
         <Literal>
           <ID>PossibleError</ID>
